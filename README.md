@@ -137,3 +137,145 @@ A: 请检查是否扫描了包含大量文件的目录（如 `node_modules`, `.g
 本项目开源，随意使用与分发。
 Happy Coding! 🚀
 
+---
+
+# English Version
+
+# Omni-Project-Stats
+
+A single-file, zero-dependency, cross-platform universal project statistics tool.
+
+It not only counts code (intelligently strips comments and blank lines), but also analyzes art assets, audio, game engine files, making it perfect for **game development**, **multimedia projects**, or **full-stack engineering** volume analysis.
+
+## ✨ Core Features
+
+*   **Dual-Mode Operation**:
+    *   🖥️ **GUI Mode**: Double-click to run, modern graphical interface, one-click scanning, real-time logs, supports visualization charts.
+    *   ⌨️ **CLI Mode**: Command-line execution, supports automation script integration, outputs detailed text reports.
+*   **Comprehensive Statistics**:
+    *   **Code**: Supports 50+ languages including C/C++, C#, Python, JS/TS, Java, Go, Rust, Lua, Shader (HLSL/GLSL), etc.
+    *   **Assets**: Recognizes 3D models (FBX/OBJ/Blend), 2D textures (PSD/PNG/TGA), audio (WAV/MP3/Wwise), video, etc.
+    *   **Engines**: Deep recognition of Unity, Unreal, Godot, RPG Maker, Cocos, and other project files.
+*   **Smart Analysis**:
+    *   Accurately strips comments (supports `//`, `/* */`, `#`, `<!-- -->`, `rem`, and other styles).
+    *   Automatically ignores binary files and common interference directories (`.git`, `node_modules`, etc.).
+*   **Zero Dependencies**:
+    *   Built on Python standard library (`tkinter`, `argparse`, `pathlib`).
+    *   No need for `pip install`, just download the single file `project_stats.py` and run.
+*   **Visualization Reports**:
+    *   Generate `project_stats_report.html` with one click.
+    *   Embedded ECharts charts, visually displaying code distribution and asset size proportions.
+
+---
+
+## 🚀 Quick Start
+
+### 1. Launch GUI
+
+Run the script directly (without arguments):
+
+```bash
+python project_stats.py
+```
+
+*   **Operation**: Click `📂 Select Project Folder` -> Check options -> Click `🚀 Start Scanning Project`.
+*   **Result**: After scanning, click `🌐 Open Report in Browser` at the bottom to view detailed charts.
+
+### 2. Command-Line Usage (CLI)
+
+Specify path in terminal:
+
+```bash
+python project_stats.py /path/to/your/project
+```
+
+Generate HTML report and count asset files:
+
+```bash
+python project_stats.py . --html --assets
+```
+
+---
+
+## 📖 Command-Line Parameters
+
+### Default Statistics (No Configuration Required)
+
+The tool outputs the following core statistics by default:
+- ✅ **File Type Statistics** - Distribution of various file types
+- ✅ **Code Statistics** - File count, lines of code (excluding blank lines and comments), total characters, and percentages for each programming language
+- ✅ **Total File Count** - Total number of files counted in the project
+
+### Optional Parameters
+
+| Parameter | Description |
+| :--- | :--- |
+| `path` | **Required** (CLI mode only). Project root directory path, defaults to current directory `.`. |
+| `--html [FILE]` | Generate interactive HTML visualization report. Can specify filename, defaults to `project_stats_report.html`. |
+| `--assets` | **Highly recommended**. Additionally count non-code/asset files (images, audio, models, binary data, etc.). |
+| `--detail` | Output detailed statistics (classified by file extension). For example: Style files breakdown into `.css`, `.scss`, `.less`; images breakdown into `.png`, `.jpg`, `.webp`, etc. |
+| `--list-files` | Output relative paths of all counted files. |
+| `--log [FILE]` | Output statistics to a text file. Can specify filename, defaults to `project_stats.log`. |
+| `--no-ignore` | Don't ignore common directories (like `.git`, `node_modules`, `dist`, etc.). Use with caution, may inflate results. |
+| `--include-hidden` | Include hidden files (files or directories starting with `.`). |
+
+### Common Usage Examples
+
+**Scenario 1: Count current directory code (CLI mode)**
+```bash
+python project_stats.py .
+```
+*(Note: If no `.` argument is provided, GUI interface will launch by default)*
+
+**Scenario 2: Count game project (including art assets) and generate report**
+```bash
+python project_stats.py "D:/UnityProjects/MyGame" --assets --html
+```
+
+**Scenario 3: View list of all counted files**
+```bash
+python project_stats.py . --list-files
+```
+
+---
+
+## 🛠️ Supported Languages and Formats
+
+This tool has built-in recognition for **100+ file extensions**, covering 90% of development scenarios:
+
+*   **Programming Languages**: C, C++, C#, Java, Kotlin, Swift, Objective-C, Python, Ruby, PHP, Go, Rust, Dart, Lua, Perl, R, Shell, Batch, PowerShell...
+*   **Web Development**: HTML, CSS, SCSS, Less, JavaScript, TypeScript, JSON, XML, YAML, TOML, WASM...
+*   **Game Engines**: Unity (.unity, .prefab), Unreal Engine (.uasset), Godot (.gd, .tscn), RPG Maker, Ren'Py, Cocos/Laya (JS/TS)...
+*   **Graphics Rendering**: Shader (HLSL/GLSL/CG), Material, Texture...
+*   **Art Assets**:
+    *   **2D**: Photoshop (PSD/PSB), Illustrator (AI), Aseprite, Clip Studio Paint, SAI, Krita...
+    *   **3D**: FBX, OBJ, GLTF/GLB, Blender, Maya, 3ds Max, Cinema 4D...
+    *   **Animation**: Spine 2D, Live2D (Cubism)...
+*   **Audio & Video**: DAW projects (FL Studio/Cubase/Logic), Audio middleware (Wwise/FMOD/ADX2), WAV/MP3/MP4/MOV...
+*   **Planning Documents**: Markdown, Office (Word/Excel/PPT), PDF, MindMap (XMind), Axure, Draw.io...
+
+---
+
+## ❓ Frequently Asked Questions (FAQ)
+
+**Q: Why does the generated report show "Total Asset Size" as 0 B?**
+A: Asset statistics is an optional feature (to improve pure code statistics speed).
+*   **CLI Mode**: Make sure to add the `--assets` parameter.
+*   **GUI Mode**: Ensure "Count Asset Files" option is checked (checked by default).
+
+**Q: Double-clicking the script doesn't open the GUI, but opens a code editor instead?**
+A: This is because `.py` files are associated with an editor.
+*   **Solution 1**: Right-click file -> Open with -> Choose Python.
+*   **Solution 2**: Right-click in folder blank area -> "Open in Terminal" -> Type `python project_stats.py`.
+
+**Q: Scanning is very slow or stuck?**
+A: Check if scanning directories with many files (like `node_modules`, `.git`, etc.).
+*   This tool automatically ignores these directories by default.
+*   **Don't** enable `--no-ignore` option casually unless you really need to count them.
+
+---
+
+## 📝 License
+
+This project is open source, free to use and distribute.
+Happy Coding! 🚀
