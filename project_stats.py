@@ -221,6 +221,14 @@ DEFAULT_IGNORED_FILES = {
     "project_stats.py",  # 排除脚本自身
 }
 
+# 排除生成的文件（通配符模式）
+DEFAULT_IGNORED_PATTERNS = [
+    "project_stats_report*.html",  # 排除生成的HTML报告（支持自定义文件名）
+    "project_stats*.log",          # 排除生成的日志文件（支持自定义文件名）
+    "*_stats_report*.html",        # 其他可能的报告文件名
+    "*.log",                       # 排除所有.log文件（用户自定义的日志）
+]
+
 BINARY_EXTS = {
     ".png",
     ".jpg",
@@ -1286,6 +1294,23 @@ def compute_code_lines_and_chars(text_wo_comments: str) -> Tuple[int, int]:
     return code_lines, code_chars
 
 
+def should_ignore_file(filename: str) -> bool:
+    """检查文件名是否应该被忽略（支持通配符模式）"""
+    import fnmatch
+    low = filename.lower()
+    
+    # 检查精确匹配
+    if low in DEFAULT_IGNORED_FILES:
+        return True
+    
+    # 检查通配符模式
+    for pattern in DEFAULT_IGNORED_PATTERNS:
+        if fnmatch.fnmatch(low, pattern):
+            return True
+    
+    return False
+
+
 def iter_files(root: Path, *, no_ignore: bool, include_hidden: bool) -> Iterable[Path]:
     root = root.resolve()
 
@@ -1308,7 +1333,7 @@ def iter_files(root: Path, *, no_ignore: bool, include_hidden: bool) -> Iterable
             low = fn.lower()
             if not include_hidden and fn.startswith("."):
                 continue
-            if (not no_ignore) and low in DEFAULT_IGNORED_FILES:
+            if (not no_ignore) and should_ignore_file(fn):
                 continue
 
             p = d / fn
@@ -1342,7 +1367,7 @@ def iter_all_files(root: Path, *, no_ignore: bool, include_hidden: bool) -> Iter
             low = fn.lower()
             if not include_hidden and fn.startswith("."):
                 continue
-            if (not no_ignore) and low in DEFAULT_IGNORED_FILES:
+            if (not no_ignore) and should_ignore_file(fn):
                 continue
             yield d / fn
 
