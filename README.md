@@ -130,6 +130,9 @@ A: 请检查是否扫描了包含大量文件的目录（如 `node_modules`, `.g
 *   本工具默认会自动忽略这些目录。
 *   **请勿**随意开启 `--no-ignore` 选项，除非你确实需要统计它们。
 
+**Q: 统计结果中会包含 `project_stats.py` 脚本自身吗？**
+A: **不会**。脚本已经自动将自己加入忽略列表，不会被计入统计结果中。
+
 ---
 
 ## 📝 License
@@ -272,6 +275,9 @@ A: This is because `.py` files are associated with an editor.
 A: Check if scanning directories with many files (like `node_modules`, `.git`, etc.).
 *   This tool automatically ignores these directories by default.
 *   **Don't** enable `--no-ignore` option casually unless you really need to count them.
+
+**Q: Will the statistics include the `project_stats.py` script itself?**
+A: **No**. The script automatically adds itself to the ignore list and will not be included in the statistics.
 
 ---
 
