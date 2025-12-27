@@ -218,6 +218,7 @@ DEFAULT_IGNORED_DIRS = {
 
 DEFAULT_IGNORED_FILES = {
     ".ds_store",
+    "project_stats.py",  # 排除脚本自身
 }
 
 BINARY_EXTS = {
