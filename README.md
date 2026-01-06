@@ -70,6 +70,7 @@ python project_stats.py . --html --assets
 | `path` | **必选** (仅 CLI 模式)。项目根目录路径，默认为当前目录 `.`。 |
 | `--html [FILE]` | 生成交互式 HTML 可视化报告。可指定文件名，默认 `project_stats_report.html`。 |
 | `--assets` | **强烈推荐**。额外统计非代码/资源文件（图片、音频、模型、二进制数据等）。 |
+| `--markdown` | 生成 Markdown 格式输出，适合直接复制粘贴到 README.md 中展示项目规模。 |
 | `--detail` | 输出细分统计（按文件后缀名分类展示）。例如：样式文件细分为 `.css`、`.scss`、`.less`；图片文件细分为 `.png`、`.jpg`、`.webp` 等。 |
 | `--list-files` | 输出所有被统计文件的相对路径清单。 |
 | `--log [FILE]` | 将统计结果输出到文本文件。可指定文件名，默认 `project_stats.log`。 |
@@ -93,6 +94,12 @@ python project_stats.py "D:/UnityProjects/MyGame" --assets --html
 ```bash
 python project_stats.py . --list-files
 ```
+
+**场景 4：生成 Markdown 格式统计（用于 README）**
+```bash
+python project_stats.py . --assets --markdown
+```
+*输出格式可直接复制粘贴到项目 README.md 中展示项目规模统计*
 
 ---
 
@@ -216,6 +223,7 @@ The tool outputs the following core statistics by default:
 | `path` | **Required** (CLI mode only). Project root directory path, defaults to current directory `.`. |
 | `--html [FILE]` | Generate interactive HTML visualization report. Can specify filename, defaults to `project_stats_report.html`. |
 | `--assets` | **Highly recommended**. Additionally count non-code/asset files (images, audio, models, binary data, etc.). |
+| `--markdown` | Generate Markdown-formatted output, suitable for copying directly to README.md to display project scale. |
 | `--detail` | Output detailed statistics (classified by file extension). For example: Style files breakdown into `.css`, `.scss`, `.less`; images breakdown into `.png`, `.jpg`, `.webp`, etc. |
 | `--list-files` | Output relative paths of all counted files. |
 | `--log [FILE]` | Output statistics to a text file. Can specify filename, defaults to `project_stats.log`. |
@@ -239,6 +247,12 @@ python project_stats.py "D:/UnityProjects/MyGame" --assets --html
 ```bash
 python project_stats.py . --list-files
 ```
+
+**Scenario 4: Generate Markdown-formatted statistics (for README)**
+```bash
+python project_stats.py . --assets --markdown
+```
+*Output can be directly copied and pasted into your project README.md to showcase project scale*
 
 ---
 
