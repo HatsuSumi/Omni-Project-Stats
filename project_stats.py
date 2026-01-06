@@ -509,6 +509,58 @@ def fmt_pct(x: float) -> str:
     return f"{x:5.1f}%"
 
 
+def adjust_percentages(values: List[float], total: float) -> List[float]:
+    """
+    使用最大余额法调整百分比，确保四舍五入后的总和恰好为 100.0%
+    
+    Args:
+        values: 原始数值列表
+        total: 总和
+    
+    Returns:
+        调整后的百分比列表（已四舍五入到小数点后1位）
+    """
+    if total == 0 or not values:
+        return [0.0] * len(values)
+    
+    # 计算原始百分比
+    raw_pcts = [(v / total * 100.0) for v in values]
+    
+    # 四舍五入到1位小数
+    rounded_pcts = [round(p, 1) for p in raw_pcts]
+    
+    # 计算总和与目标的差值
+    current_sum = sum(rounded_pcts)
+    diff = 100.0 - current_sum
+    
+    # 如果差值很小（±0.1%），则需要调整
+    if abs(diff) < 0.001:
+        return rounded_pcts
+    
+    # 计算每个值的余额（原始百分比 - 四舍五入后的百分比）
+    remainders = [(raw_pcts[i] - rounded_pcts[i], i) for i in range(len(values))]
+    
+    # 按余额排序（如果需要增加百分比，选择余额最大的；如果需要减少，选择余额最小的）
+    if diff > 0:
+        # 需要增加总和，选择被向下舍入最多的项（余额最大）
+        remainders.sort(reverse=True)
+    else:
+        # 需要减少总和，选择被向上舍入最多的项（余额最小）
+        remainders.sort()
+    
+    # 调整百分比
+    adjustments_needed = int(round(abs(diff) / 0.1))
+    for i in range(min(adjustments_needed, len(values))):
+        idx = remainders[i][1]
+        if diff > 0:
+            rounded_pcts[idx] += 0.1
+        else:
+            rounded_pcts[idx] -= 0.1
+        rounded_pcts[idx] = round(rounded_pcts[idx], 1)
+    
+    return rounded_pcts
+
+
 # ----------------------------
 # 注释剥离：通用结果
 # ----------------------------
@@ -1627,11 +1679,17 @@ def main(argv: Optional[List[str]] = None) -> int:
     total_lines = sum(st.code_lines for _, st in rows)
     total_chars = sum(st.code_chars for _, st in rows)
 
+    # 调整百分比，确保总和为 100%
+    line_values = [st.code_lines for _, st in rows]
+    char_values = [st.code_chars for _, st in rows]
+    adjusted_line_pcts = adjust_percentages(line_values, total_lines)
+    adjusted_char_pcts = adjust_percentages(char_values, total_chars)
+
     # 输出每行
-    for t, st in rows:
+    for i, (t, st) in enumerate(rows):
         name = CODE_TYPE_LABELS.get(t, t)
-        line_pct = (st.code_lines / total_lines * 100.0) if total_lines else 0.0
-        char_pct = (st.code_chars / total_chars * 100.0) if total_chars else 0.0
+        line_pct = adjusted_line_pcts[i]
+        char_pct = adjusted_char_pcts[i]
 
         # 尽量贴近样例：
         # JavaScript  :  93 个文件, 18,848 行代码 ( 68.3%),   936,197 字符 ( 75.8%)
@@ -1741,20 +1799,26 @@ def generate_markdown_output(res, total_code_files: int, total_lines: int, total
     lines.append("### 代码规模")
     lines.append("")
     
+    # 调整百分比，确保总和为 100%
+    line_values = [st.code_lines for _, st in rows]
+    char_values = [st.code_chars for _, st in rows]
+    adjusted_line_pcts = adjust_percentages(line_values, total_lines)
+    adjusted_char_pcts = adjust_percentages(char_values, total_chars)
+    
     # 代码总行数
     lines.append(f"- **代码总行数**：{fmt_int(total_lines)} 行（不含空行、注释）")
-    for t, st in rows:
+    for i, (t, st) in enumerate(rows):
         name = CODE_TYPE_LABELS.get(t, t)
-        line_pct = (st.code_lines / total_lines * 100.0) if total_lines else 0.0
+        line_pct = adjusted_line_pcts[i]
         lines.append(f"  - {name}：{fmt_int(st.code_lines)} 行（{fmt_pct(line_pct)}）")
     
     lines.append("")
     
     # 字符总数
     lines.append(f"- **字符总数**：{fmt_int(total_chars)} 字符（不含注释）")
-    for t, st in rows:
+    for i, (t, st) in enumerate(rows):
         name = CODE_TYPE_LABELS.get(t, t)
-        char_pct = (st.code_chars / total_chars * 100.0) if total_chars else 0.0
+        char_pct = adjusted_char_pcts[i]
         lines.append(f"  - {name}：{fmt_int(st.code_chars)} 字符（{fmt_pct(char_pct)}）")
     
     # 如果有资源文件统计
