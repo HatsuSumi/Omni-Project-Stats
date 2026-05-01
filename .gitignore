@@ -27,6 +27,8 @@ wheels/
 # IDE
 .vscode/
 .idea/
+.cursor/
+.specstory/
 *.swp
 *.swo
 *~
@@ -35,14 +37,16 @@ wheels/
 # 输出文件
 project_stats.log
 project_stats_report.html
+project_stats.json
 *.log
 
 # 临时文件
 temp_main.txt
+coverage_result.txt
+check_coverage.py
 
 # Windows
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
-
